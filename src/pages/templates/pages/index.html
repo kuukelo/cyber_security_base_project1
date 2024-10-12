@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8">
+        <title>New bank</title>
+    </head>
+    <body>
+        <main>
+            <h1>New bank</h1>
+
+            <p>Hi {{ user.username }}, welcome!</p>
+
+            <h2>Your accounts</h2>
+            <table>
+                <tr>
+                <th style="text-align:left">Iban  <td>Balance
+            </table>
+            <ul id="accounts">
+            </ul>
+            {% for a in accounts %}
+
+            <table>
+                <tr>
+                <th style="text-align:left">{{a.iban}}  <td>{{a.balance}} €
+            </table>
+
+            {% endfor %}
+
+            <h2>Create new account</h2>
+            <p>Give iban</p>
+            <form id='add' action='add/' method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="iban"/><br/>
+            <input type="submit" value="Create account"/>
+            </form>
+            
+            <ul id="all">
+            </ul>
+
+            
+            <h2>Transfer money</h2>
+            <form id='transfer' action='transfer/' method="POST">             
+                <span>From:</span><br/>
+                <!-- {% csrf_token %} -->
+                <select name="from">
+                {% for account in accounts %}
+                    <option value="{{account.iban}}">{{account.iban}} {{account.balance}} €</option>
+                {% endfor %}
+                </select><br/>
+
+                <span>To:</span><br/>
+                <!-- {% csrf_token %} -->
+                <select name="to">
+                {% for account in all %}
+                    <option value="{{account.iban}}">{{account.owner.username}} {{account.iban}}</option>
+                {% endfor %}
+                </select><br/>
+        
+                <span>Amount:</span><br/>
+                <input type="number" name="amount"/><br/>
+        
+                <input type="submit" value="Transfer"/>
+            </form>
+
+            <p></p>
+            <form action='logout/' method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Logout"/>
+            </form>    
+        </main>
+    </body>
+</html>
